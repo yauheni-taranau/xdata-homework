@@ -1,0 +1,6 @@
+rootProject.name = 'demo-project'
+include 'exchange-system'
+include 'oauth-server'
+include 'realtime-simulation'
+include 'frontend'
+

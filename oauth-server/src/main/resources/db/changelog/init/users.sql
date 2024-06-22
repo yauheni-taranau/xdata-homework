@@ -1,0 +1,1 @@
+insert into public.users values ('user', 'user')

@@ -1,0 +1,108 @@
+buildscript {
+    ext {
+        springBootVersion = '3.2.6'
+        kotlinVersion = '1.9.24'
+        reactorVersion = '4.0.3'
+        kotlinCoroutinesVersion = '1.8.1'
+        springCloudVersion = '2022.0.4'
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '3.2.6'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.24'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.24'
+}
+
+group = 'io.xdata.group'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'io.xdata.group'
+
+    repositories {
+        mavenCentral()
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    dependencyManagement {
+        dependencies {
+            dependency "org.springframework.boot:spring-boot-starter-oauth2-authorization-server:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-oauth2-resource-server:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-oauth2-client:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-webflux:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-autoconfigure:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-reactor-netty:${springBootVersion}"
+            dependency "org.springframework.boot:spring-boot-starter-data-r2dbc:${springBootVersion}"
+
+            dependency "org.liquibase:liquibase-core:4.28.0"
+            dependency 'io.r2dbc:r2dbc-h2:1.0.0.RELEASE'
+            dependency 'jakarta.validation:jakarta.validation-api:3.1.0'
+            dependency 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+
+
+            dependency "com.playtika.reactivefeign:feign-reactor-webclient:${reactorVersion}"
+            dependency "com.playtika.reactivefeign:feign-reactor-cloud:${reactorVersion}"
+            dependency "com.playtika.reactivefeign:feign-reactor-spring-configuration:${reactorVersion}"
+
+            imports {
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+                mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            }
+
+            //kotlin
+            dependency "org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}"
+            dependency "org.jetbrains.kotlin:kotlin-test-junit5:${kotlinVersion}"
+            dependencySet(group: 'org.jetbrains.kotlinx', version: "$kotlinCoroutinesVersion") {
+                entry 'kotlinx-coroutines-core'
+                entry 'kotlinx-coroutines-reactor'
+            }
+            dependency 'io.klogging:klogging-jvm:0.5.14'
+
+            // test
+            dependency "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+            dependency "org.springframework.cloud:spring-cloud-starter-contract-stub-runner:${springBootVersion}"
+        }
+    }
+}
+
+
+ext {
+    set('springCloudVersion', "2023.0.2")
+}
+
+dependencies {
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll '-Xjsr305=strict'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

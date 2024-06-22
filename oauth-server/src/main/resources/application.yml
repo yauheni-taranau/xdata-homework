@@ -1,0 +1,44 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:crypto-exchange
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    hikari:
+      schema: PUBLIC
+  liquibase:
+    change-log: /db/changelog/db.changelog-master.yaml
+    url: jdbc:h2:mem:crypto-exchange;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    user: sa
+    password: password
+  security:
+    authorizationserver:
+      client:
+        frontend:
+          registration:
+            client-id: "frontend"
+            client-secret: "frontend"
+            client-authentication-methods:
+              - client_secret_basic
+            authorization-grant-types:
+              - authorization_code
+            redirect-uris:
+              - http://127.0.0.1:8080/api/test
+            scopes:
+              - openid
+              - api.all
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: public
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
